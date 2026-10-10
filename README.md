@@ -14,4 +14,6 @@ Open the page, choose a weapon and ammunition, place a firing line on the map (c
 ## What is and is not covered
 Covered: chapters 4 to 10, 12, 14 and 15 of the pamphlet for the systems listed in the weapon menu. Not covered: Javelin, MLRS / GMLRS / Excalibur, helicopter and missile fires, and several figure-only items.
 
+See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
+
 Built with Leaflet (BSD-2-Clause) and polygon-clipping (MIT).
