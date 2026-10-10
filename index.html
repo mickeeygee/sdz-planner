@@ -671,12 +671,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	}
 </style>
 <style>
-  :root { --bg:#f4f5f7; --panel:#ffffff; --ink:#1b1f24; --mute:#5d6672; --line:#d6dae0; --accent:#1f6feb; --warn:#8a5a00; --warnbg:#fff4d6; --ok:#1a7f37; --bad:#c62828; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#14171b; --panel:#1d2127; --ink:#e8ebef; --mute:#9aa4b0; --line:#323943; --accent:#58a6ff; --warn:#f2cc60; --warnbg:#3a2f10; --ok:#56d364; --bad:#ff7b72; } }
+  /* Tokens. Light is the default; dark follows the phone unless the user picks a theme (data-theme on <html>). */
+  :root { --bg:#f3f4f6; --panel:#ffffff; --panel2:#eceff3; --ink:#14181d; --mute:#566170; --line:#cfd5dc; --accent:#0b5bd3; --accent-ink:#ffffff; --warn:#7a4e00; --warnbg:#fff1cc; --ok:#17692e; --bad:#b3261e; --shadow:0 -6px 24px rgba(0,0,0,.18); --tap:38px; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#101317; --panel:#1b2026; --panel2:#262d35; --ink:#eef1f4; --mute:#a3adb9; --line:#343c46; --accent:#5aa2ff; --accent-ink:#06131f; --warn:#f2cc60; --warnbg:#3a2f10; --ok:#56d364; --bad:#ff7b72; --shadow:0 -6px 24px rgba(0,0,0,.55); color-scheme:dark; } }
+  :root[data-theme="dark"] { --bg:#101317; --panel:#1b2026; --panel2:#262d35; --ink:#eef1f4; --mute:#a3adb9; --line:#343c46; --accent:#5aa2ff; --accent-ink:#06131f; --warn:#f2cc60; --warnbg:#3a2f10; --ok:#56d364; --bad:#ff7b72; --shadow:0 -6px 24px rgba(0,0,0,.55); color-scheme:dark; }
   * { box-sizing:border-box; }
-  body { margin:0; font:14px/1.4 system-ui,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--ink); }
-  .wrap { display:grid; grid-template-columns:350px 1fr; height:100vh; }
-  aside { background:var(--panel); border-right:1px solid var(--line); overflow:auto; padding:14px; }
+  html, body { height:100%; }
+  body { margin:0; font:14px/1.4 system-ui,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--ink); overscroll-behavior:none; }
+  .wrap { display:grid; grid-template-columns:350px minmax(0,1fr); height:100vh; height:100dvh; }
+  aside { min-width:0; background:var(--panel); border-right:1px solid var(--line); overflow:auto; padding:14px; }
   h1 { font-size:17px; margin:0 0 2px; }
   h2 { font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--mute); margin:16px 0 0; padding-top:12px; border-top:1px solid var(--line); }
   .sub { color:var(--mute); font-size:12px; margin-bottom:6px; }
@@ -686,76 +689,149 @@ svg.leaflet-image-layer.leaflet-interactive path {
   input.bad { border-color:var(--bad); }
   .row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
   .seg { display:flex; gap:6px; } .seg label { flex:1; margin:0; display:flex; align-items:center; gap:5px; padding:7px 8px; border:1px solid var(--line); border-radius:6px; color:var(--ink); font-size:13px; cursor:pointer; }
-  button { padding:9px 12px; border:0; border-radius:6px; background:var(--accent); color:#fff; font:inherit; font-weight:600; cursor:pointer; width:100%; margin-top:12px; }
+  button { padding:9px 12px; border:0; border-radius:6px; background:var(--accent); color:var(--accent-ink); font:inherit; font-weight:600; cursor:pointer; width:100%; margin-top:12px; }
   button.sec { background:transparent; color:var(--accent); border:1px solid var(--line); margin-top:6px; padding:7px 10px; font-weight:500; }
-  .readout { font-size:11px; color:var(--mute); margin-top:3px; font-variant-numeric:tabular-nums; min-height:15px; }
+  .readout { font-size:11px; color:var(--mute); margin-top:3px; font-variant-numeric:tabular-nums; min-height:15px; overflow-wrap:anywhere; }
   .readout.err { color:var(--bad); }
   .pad { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; } .pad button { margin:0; padding:7px 0; }
   table { width:100%; border-collapse:collapse; margin-top:8px; font-size:12px; }
   td { padding:3px 4px; border-bottom:1px solid var(--line); } td:last-child { text-align:right; font-variant-numeric:tabular-nums; }
   .warn { color:var(--warn); font-size:12px; margin-top:8px; }
   .legend span { display:inline-block; width:10px; height:10px; margin:0 4px 0 8px; border-radius:2px; vertical-align:middle; }
-  #map { height:100%; } .nomap { padding:30px; color:var(--mute); }
-  .pin { width:var(--pin,26px); height:var(--pin,26px); border-radius:50%; background:var(--accent); color:#fff; font-weight:700; font-size:calc(var(--pin,26px)*.5); display:flex; align-items:center; justify-content:center; border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.5); }
+  .nomap { padding:30px; color:var(--mute); }
+  .pin { width:var(--pin,26px); height:var(--pin,26px); border-radius:50%; background:var(--accent); color:var(--accent-ink); font-weight:700; font-size:calc(var(--pin,26px)*.5); display:flex; align-items:center; justify-content:center; border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.5); }
   .pin.mid { width:calc(var(--pin,26px)*.7); height:calc(var(--pin,26px)*.7); background:#fff; color:#000; font-size:calc(var(--pin,26px)*.42); border-color:var(--accent); }
-  .pin.aim { background:#e0302d; width:calc(var(--pin,26px)*1.15); height:calc(var(--pin,26px)*1.15); font-size:calc(var(--pin,26px)*.57); }
+  .pin.aim { background:#e0302d; color:#fff; width:calc(var(--pin,26px)*1.15); height:calc(var(--pin,26px)*1.15); font-size:calc(var(--pin,26px)*.57); }
+  .pin.lim { background:#ff9a1f; width:calc(var(--pin,26px)*.92); height:calc(var(--pin,26px)*.92); font-size:calc(var(--pin,26px)*.46); color:#000; }
   .row3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; } .row3 button { margin-top:6px; }
-  .mapwrap { position:relative; height:100%; min-height:0; }
+  .mapwrap { position:relative; height:100%; min-height:0; min-width:0; overflow:hidden; }
+  #map { position:absolute; inset:0; }
   #toolbar { position:absolute; z-index:1100; top:10px; left:50%; transform:translateX(-50%); display:flex; gap:4px; align-items:center; flex-wrap:wrap; justify-content:center; max-width:calc(100% - 130px);
              background:var(--panel); border:1px solid var(--line); border-radius:9px; padding:4px; box-shadow:0 2px 10px rgba(0,0,0,.35); }
   #toolbar button { width:auto; margin:0; padding:7px 11px; background:transparent; color:var(--ink); border:1px solid transparent; border-radius:6px; font-weight:600; font-size:13px; }
   #toolbar button:hover { background:var(--bg); }
-  #toolbar button.active { background:var(--accent); color:#fff; }
+  #toolbar button.active, #t-gps.active { background:var(--accent); color:var(--accent-ink); }
   #toolbar .sep { width:1px; align-self:stretch; background:var(--line); margin:2px 2px; }
-  #addmenu { position:absolute; top:100%; left:0; margin-top:4px; background:var(--panel); border:1px solid var(--line); border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,.4); min-width:210px; padding:4px; display:none; z-index:1200; }
-  #addmenu.open { display:block; }
-  #addmenu button { display:block; width:100%; text-align:left; font-weight:500; }
-  #hint { position:absolute; z-index:1100; top:auto; bottom:28px; left:50%; transform:translateX(-50%); background:rgba(20,23,27,.88); color:#fff; font-size:12.5px; padding:5px 12px; border-radius:14px; pointer-events:none; max-width:calc(100% - 130px); text-align:center; }
+  #t-range { width:auto; max-width:130px; padding:6px 6px; font-size:13px; font-weight:600; }
+  #t-panel { font-weight:700; } #t-panel.warn { color:var(--warn); }
+  .menu { position:fixed; display:none; z-index:1300; background:var(--panel); border:1px solid var(--line); border-radius:12px; box-shadow:0 8px 28px rgba(0,0,0,.45); padding:6px; overflow-y:auto; }
+  .menu.open { display:block; }
+  .menu button { display:block; width:100%; margin:0; text-align:left; padding:11px 12px; background:transparent; color:var(--ink); border:0; border-radius:8px; font-weight:500; font-size:15px; }
+  .menu button:hover, .menu button:active { background:var(--panel2); }
+  .menu hr { border:0; border-top:1px solid var(--line); margin:4px 0; }
+  #hint { position:absolute; z-index:1100; top:auto; bottom:28px; left:50%; transform:translateX(-50%); background:rgba(20,23,27,.9); color:#fff; font-size:12.5px; padding:6px 12px; border-radius:14px; pointer-events:none; max-width:calc(100% - 130px); text-align:center; }
   #hint:empty { display:none; }
-  .pin.lim { background:#ff9a1f; width:calc(var(--pin,26px)*.92); height:calc(var(--pin,26px)*.92); font-size:calc(var(--pin,26px)*.46); color:#000; }
+  #fit { position:absolute; z-index:1000; right:10px; top:62px; width:var(--tap); height:var(--tap); margin:0; padding:0; border-radius:8px; background:var(--panel); color:var(--ink); border:1px solid var(--line); box-shadow:0 1px 5px rgba(0,0,0,.35); display:flex; align-items:center; justify-content:center; }
+  #fit svg, #actRow svg, #p-new svg, #p-edit svg { stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  #fit svg { width:22px; height:22px; }
   .bbtip { background:#a33fff; color:#fff; border:0; font-weight:700; font-size:11px; padding:2px 6px; box-shadow:none; white-space:nowrap; }
   .bbtip:before { display:none; }
-  .ritem { display:flex; align-items:center; gap:8px; padding:7px 8px; border:1px solid var(--line); border-radius:7px; margin-top:5px; cursor:pointer; }
-  .ritem.on { border-color:var(--accent); background:rgba(31,111,235,.12); }
+  .ritem { display:flex; align-items:center; gap:8px; padding:7px 8px; border:1px solid var(--line); border-radius:7px; margin-top:5px; cursor:pointer; min-width:0; }
+  .ritem.on { border-color:var(--accent); background:color-mix(in srgb, var(--accent) 14%, transparent); }
   .ritem input { margin:0; flex:none; width:auto; }
   .ritem .rn { min-width:0; } .ritem .rn b { display:block; font-size:13px; } .ritem .rn span { display:block; font-size:11px; color:var(--mute); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .rlabel { position:absolute; transform:translate(10px,-28px); white-space:nowrap; background:rgba(20,23,27,.85); color:#fff; border:1px solid #fff; border-radius:10px; padding:2px 8px; font:600 11px system-ui,sans-serif; cursor:pointer; }
-  #t-range { width:auto; max-width:130px; padding:6px 6px; font-size:13px; font-weight:600; }
-  .nopanel .wrap { grid-template-columns:1fr; } .nopanel aside { display:none; }
-  #t-panel { font-weight:700; } #t-panel.warn { color:var(--warn); }
-  @media (max-width:760px) { .nopanel .wrap { grid-template-rows:100vh; } .nopanel .mapwrap { height:100vh; height:100dvh; } .wrap { grid-template-columns:1fr; grid-template-rows:56vh auto; height:auto; } .mapwrap { order:-1; height:56vh; position:sticky; top:0; z-index:20; }
-    aside { border-right:0; border-top:1px solid var(--line); overflow:visible; } #map { height:100%; } #toolbar { max-width:calc(100% - 110px); } }
-  /* ---- mobile / touch ---- */
-  html, body { overscroll-behavior:none; }
-  button, select, input, .ritem, #toolbar { touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
-  #toolbar, .pin, .rlabel, #hint { -webkit-user-select:none; user-select:none; }
   .leaflet-container { background:#26303a; }
-  #addmenu { position:fixed; top:auto; left:auto; margin:0; }
-  #t-gps.active { background:var(--accent); color:#fff; }
+  .nopanel .wrap { grid-template-columns:minmax(0,1fr); } .nopanel aside { display:none; }
+  button, select, input, .ritem, #toolbar, #grab { touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+  #toolbar, .pin, .rlabel, #hint, #sheetHead { -webkit-user-select:none; user-select:none; }
+
+  /* ---------- touch screens ---------- */
+  .touch { --tap:44px; }
   .touch select, .touch input[type=number], .touch input[type=text] { font-size:16px; padding:11px 9px; }
-  .touch #toolbar button, .touch #addmenu button, .touch #t-range { min-height:44px; padding:10px 13px; }
+  .touch #toolbar button, .touch #t-range { min-height:44px; padding:10px 13px; }
   .touch button.sec, .touch button { min-height:44px; }
   .touch .ritem { padding:11px 10px; }
   .touch .leaflet-bar a { width:40px; height:40px; line-height:40px; font-size:20px; }
   .touch .leaflet-control-layers-toggle { width:44px; height:44px; }
-  @media (max-width:760px) {
-    #toolbar { top:auto; bottom:calc(8px + env(safe-area-inset-bottom)); left:8px; right:8px; transform:none; max-width:none; flex-wrap:nowrap; overflow-x:auto; justify-content:flex-start; scrollbar-width:none; }
-    #toolbar::-webkit-scrollbar { display:none; }
-    #toolbar > *, #toolbar > span { flex:none; }
-    #hint { bottom:auto; top:10px; max-width:calc(100% - 120px); }
-    .leaflet-bottom { margin-bottom:calc(60px + env(safe-area-inset-bottom)); }
-    aside { padding-bottom:calc(18px + env(safe-area-inset-bottom)); }
-  }
+
+  /* ---------- phone layout: map on top, controls in a bottom sheet ---------- */
+  .phone-only { display:none; }
+  .mob { display:none; } .phone .mob { display:inline; } .phone .desk { display:none; }
+  .phone { font-size:15px; }
+  .phone .wrap { display:flex; flex-direction:column; }
+  .phone .mapwrap { flex:1 1 0; height:auto; order:1; }
+  .phone #toolbar { display:none; }
+  .phone #hint { top:10px; bottom:auto; max-width:calc(100% - 118px); pointer-events:auto; cursor:pointer; }
+  .phone .phone-only { display:block; }
+  .phone aside, .phone.nopanel aside { display:flex; flex-direction:column; flex:none; padding:0; overflow:hidden; border-right:0; border-top:1px solid var(--line); border-radius:18px 18px 0 0; box-shadow:var(--shadow); position:relative; z-index:900; transition:height .22s ease; order:2; }
+  .phone #sheetBody { flex:1 1 auto; min-height:0; overflow-y:auto; overflow-x:hidden; padding:4px 16px calc(28px + env(safe-area-inset-bottom, 0px)); -webkit-overflow-scrolling:touch; }
+  .phone #sheetBody section { display:none; }
+  .phone[data-tab="weapon"] #sheetBody .s-weapon, .phone[data-tab="pos"] #sheetBody .s-pos, .phone[data-tab="aim"] #sheetBody .s-aim, .phone[data-tab="ranges"] #sheetBody .s-ranges, .phone[data-tab="info"] #sheetBody .s-info { display:block; }
+  .phone #sheetBody h2 { display:none; }
+  .phone label { font-size:13px; }
+  #sheetTop { padding:0 12px 10px; }
+  #grab { height:26px; display:flex; align-items:center; justify-content:center; touch-action:none; cursor:grab; }
+  #grab span { width:46px; height:5px; border-radius:3px; background:var(--line); }
+  #sumRow { display:flex; align-items:center; gap:8px; }
+  #p-range { flex:1 1 auto; min-width:0; width:auto; font-weight:700; font-size:16px; padding:9px 10px; border-radius:10px; }
+  #p-new { flex:none; width:44px; height:44px; margin:0; padding:0; border-radius:10px; background:var(--panel2); color:var(--ink); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; }
+  #p-new svg, #p-edit svg { width:22px; height:22px; }
+  #p-edit { flex:none; width:44px; height:44px; margin:0; padding:0; border-radius:10px; background:var(--panel2); color:var(--ink); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; }
+  #p-name { flex:1 1 auto; min-width:0; width:auto; font-weight:700; font-size:16px; padding:9px 10px; border-radius:10px; border-color:var(--accent); }
+  #draft { flex:none; font-size:10px; line-height:1.15; letter-spacing:.06em; font-weight:800; text-align:center; color:var(--warn); background:var(--warnbg); border:1px solid color-mix(in srgb, var(--warn) 45%, transparent); border-radius:8px; padding:4px 6px; }
+  #sumText { margin:7px 2px 10px; font-size:13px; color:var(--mute); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; } #sumText b { color:var(--ink); }
+  #actRow { display:flex; gap:6px; }
+  #actRow button { flex:1 1 0; min-width:0; margin:0; padding:6px 2px; min-height:52px; border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; font-size:12px; font-weight:600; background:var(--panel2); color:var(--ink); border:1px solid var(--line); line-height:1.1; text-align:center; }
+  #actRow button.primary { background:var(--accent); color:var(--accent-ink); border-color:transparent; }
+  #actRow button.on { background:var(--accent); color:var(--accent-ink); border-color:transparent; }
+  #actRow button svg { width:21px; height:21px; flex:none; }
+  #actRow.big button { flex-direction:row; gap:8px; font-size:15px; min-height:60px; padding:8px 10px; }
+  #tabBar { display:none; margin:0 12px 10px; padding:3px; gap:3px; background:var(--panel2); border-radius:12px; }
+  [data-sheet="half"] #tabBar, [data-sheet="full"] #tabBar { display:flex; }
+  #tabBar button { flex:1 1 0; min-width:0; margin:0; padding:8px 2px; background:transparent; color:var(--mute); border:0; border-radius:9px; font-size:14px; font-weight:600; min-height:42px; }
+  #tabBar button.on { background:var(--accent); color:var(--accent-ink); box-shadow:0 1px 4px rgba(0,0,0,.3); }
+  /* map controls: solid backing so they read over any imagery */
+  .leaflet-bar, .leaflet-control-layers { border:1px solid var(--line) !important; border-radius:12px !important; box-shadow:0 2px 8px rgba(0,0,0,.4) !important; overflow:hidden; }
+  .leaflet-bar a, .leaflet-control-layers-toggle { background-color:color-mix(in srgb, var(--panel) 90%, transparent) !important; color:var(--ink) !important; border-color:var(--line) !important; -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
+  .leaflet-control-layers { background:var(--panel) !important; color:var(--ink); }
+  #fit { border-radius:12px; background:color-mix(in srgb, var(--panel) 90%, transparent); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); box-shadow:0 2px 8px rgba(0,0,0,.4); }
+  .leaflet-control-scale-line { background:color-mix(in srgb, var(--panel) 85%, transparent) !important; color:var(--ink); border-color:var(--ink) !important; font-weight:600; }
+  .leaflet-control-attribution { font-size:10px; }
+  .edgelbl { background:rgba(20,23,27,.88); color:#fff; border:1px solid rgba(255,255,255,.7); border-radius:10px; padding:1px 7px; font:700 12px system-ui,sans-serif; white-space:nowrap; transform:translate(-50%,-50%); font-variant-numeric:tabular-nums; pointer-events:none; width:auto !important; height:auto !important; }
+  .phone #vals { background:var(--panel2); border-radius:12px; padding:6px 10px; margin-top:12px; }
+  .phone #vals tr:last-child td { border-bottom:0; }
+  .phone #sheetBody .row { gap:10px; }
+  /* phone held sideways: controls become a panel on the right, the map fills the rest */
+  .phone.land .wrap { flex-direction:row; }
+  .phone.land .mapwrap { order:1; }
+  .phone.land aside, .phone.land.nopanel aside { order:2; width:min(400px, 42vw); height:auto !important; border-radius:0; border-top:0; border-left:1px solid var(--line); box-shadow:none; transition:none; }
+  .phone.land #grab, .phone.land #sumText { display:none; }
+  .phone.land #sheetTop { padding-top:8px; }
+  .phone.land #tabBar { display:flex; }
+  .phone.land #actRow button { min-height:46px; padding:3px 1px; font-size:11px; }
+  .phone.land #tabBar { margin:0 8px 8px; } .phone.land #tabBar button { font-size:13px; min-height:38px; }
+  .phone.land #sheetTop { padding:8px 8px 8px; } .phone.land #sheetBody { padding-left:12px; padding-right:12px; }
+  .phone.land #p-new, .phone.land #p-edit { width:40px; height:40px; } .phone.land #p-range, .phone.land #p-name { font-size:14px; padding:8px 8px; }
+  .phone.land #hint { max-width:calc(100% - 130px); }
 </style>
 </head>
 <body>
 <div class="wrap">
-<aside>
-  <h1>SDZ Planner</h1>
-  <div class="sub">Small-arms surface danger zones &middot; DA PAM 385-63 ch. 4</div>
-  <div class="banner"><b>Planning aid only &mdash; not an approved SDZ.</b> Data is from a <b>draft</b> pamphlet revision and has not been validated against the signed edition. Final SDZs need range control approval.</div>
-
-  <h2 style="margin-top:0;border-top:0;padding-top:0">Ranges</h2>
+<aside id="sheet">
+  <div id="sheetHead" class="phone-only">
+    <div id="sheetTop">
+      <div id="grab" role="separator" aria-label="Drag to resize the panel"><span></span></div>
+      <div id="sumRow">
+        <select id="p-range" aria-label="Range"></select>
+        <input type="text" id="p-name" hidden maxlength="40" autocomplete="off" enterkeyhint="done" aria-label="Range name">
+        <button id="p-edit" aria-label="Rename range"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg></button>
+        <button id="p-new" aria-label="New range"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+        <span id="draft" title="Draft pamphlet data. Planning aid only, not an approved SDZ.">DRAFT<br>DATA</span>
+      </div>
+      <div id="sumText"></div>
+      <div id="actRow"></div>
+    </div>
+    <div id="tabBar"><button data-tab="weapon" class="on">Weapon</button><button data-tab="pos">Position</button><button data-tab="aim">Aim</button><button data-tab="ranges">Ranges</button><button data-tab="info">Info</button></div>
+  </div>
+  <div id="sheetBody">
+    <section class="s-about s-info">
+      <h1>SDZ Planner</h1>
+      <div class="sub">Surface danger zones &middot; DA PAM 385-63</div>
+      <div class="banner"><b>Planning aid only &mdash; not an approved SDZ.</b> Data is from a <b>draft</b> pamphlet revision and has not been validated against the signed edition. Final SDZs need range control approval.</div>
+    </section>
+    <section class="s-ranges">
+      <h2>Ranges</h2>
   <div id="rangeList"></div>
   <div class="row3"><button class="sec" id="rNew">+ New range</button><button class="sec" id="rCopy">Copy</button><button class="sec" id="rDel">Delete</button></div>
   <label>Range name</label>
@@ -764,7 +840,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <input type="file" id="rFile" accept=".json,application/json" hidden>
   <div class="sub" style="margin-top:4px">Everything below edits the selected range. All ranges stay on the map and are saved automatically in this browser.</div>
 
-  <h2>Weapon</h2>
+    <button id="kml">Download KML &mdash; all visible ranges</button>
+      <button class="sec" id="kml1">This range only</button>
+    </section>
+    <section class="s-weapon">
+      <h2>Weapon</h2>
   <label>Ammunition</label>
   <select id="ammo"></select>
   <div class="row">
@@ -814,8 +894,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <div class="sub">Set the azimuth and left/right limits to the <b>target area</b>. Probable errors are in the firing table for the charge and range.</div>
   </div>
 
-  <h2>Firing line</h2>
-  <div class="sub">Type lat/lon (<code>35.1, -79.0</code>) or MGRS (<code>17S QV 12345 67890</code>), or use the toolbar on the map (Add, then click). Right-click a pin to delete it.</div>
+    <table id="vals"></table>
+      <div class="warn" id="warn"></div>
+    </section>
+    <section class="s-pos">
+      <h2>Firing line</h2>
+  <div class="sub"><span class="desk">Type lat/lon (<code>35.1, -79.0</code>) or MGRS (<code>17S QV 12345 67890</code>), or use the toolbar on the map (Add, then click). Right-click a pin to delete it.</span><span class="mob">Type lat/lon (<code>35.1, -79.0</code>) or MGRS (<code>17S QV 12345 67890</code>). Or tap <b>Add</b> under the map and place the ends with a tap or <b>my location</b>. To remove a pin: <b>More</b>, then <b>Delete pins</b>, then tap the pin.</span></div>
   <label>Left end</label>
   <input type="text" id="cL" placeholder="lat, lon  or  MGRS" autocomplete="off" spellcheck="false">
   <div class="readout" id="rL"></div>
@@ -831,7 +915,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <div class="row" style="grid-template-columns:70px 1fr"><input type="number" id="step" value="10" min="1" step="1"><div class="pad">
     <button class="sec" data-mv="N">N</button><button class="sec" data-mv="S">S</button><button class="sec" data-mv="W">W</button><button class="sec" data-mv="E">E</button></div></div>
 
-  <h2>Direction of fire</h2>
+  </section>
+    <section class="s-aim">
+      <h2>Direction of fire</h2>
   <label>Azimuth (&deg; true) &mdash; or drag the red arrow on the map</label>
   <input type="number" id="az" value="0" step="any">
   <div class="row">
@@ -841,13 +927,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <button class="sec" id="perp">Face perpendicular to the line</button>
   <div class="sub" style="margin-top:4px">Degrees true, clockwise from north (0 = north, 90 = east); no magnetic/grid correction. Limits of 0 give a single fan; widen them for a range with left and right limits of fire.</div>
 
-  <button id="kml">Download KML &mdash; all visible ranges</button>
-  <button class="sec" id="kml1">This range only</button>
-
-  <table id="vals"></table>
-  <div class="warn" id="warn"></div>
-  <div class="sub legend" style="margin-top:10px"><span style="background:#e0302d"></span>dispersion / impact<span style="background:#ff9a1f"></span>ricochet<span style="background:#ffd90f"></span>Area A<span style="background:#ffe98a"></span>Area B<span style="background:#a33fff"></span>back blast (F)<span style="background:#3b82f6"></span>target area<span style="background:#7ba7d9"></span>Area H<span style="background:#b5541c"></span>Area I<span style="background:#ff7ab8"></span>Area C<span style="background:#6fcf6f"></span>Area D<span style="background:#9a9a9a"></span>Area E</div>
+  </section>
+    <section class="s-legend s-info">
+      <div class="sub legend" style="margin-top:10px"><span style="background:#e0302d"></span>dispersion / impact<span style="background:#ff9a1f"></span>ricochet<span style="background:#ffd90f"></span>Area A<span style="background:#ffe98a"></span>Area B<span style="background:#a33fff"></span>back blast (F)<span style="background:#3b82f6"></span>target area<span style="background:#7ba7d9"></span>Area H<span style="background:#b5541c"></span>Area I<span style="background:#ff7ab8"></span>Area C<span style="background:#6fcf6f"></span>Area D<span style="background:#9a9a9a"></span>Area E</div>
   <div class="sub" id="src"></div>
+      <button class="sec" id="themeBtn">Theme: <span data-themelabel>Auto</span></button>
+    </section>
+  </div>
 </aside>
 <div class="mapwrap">
 <div id="toolbar">
@@ -857,19 +943,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <span class="sep"></span>
   <button id="t-move" data-tool="move" title="Drag pins and handles (Esc)">Move</button>
   <span class="sep"></span>
-  <span style="position:relative">
-    <button id="t-add">Add &#9662;</button>
-    <div id="addmenu">
-      <button data-tool="L">Left end of firing line</button>
-      <button data-tool="R">Right end of firing line</button>
-      <button data-tool="limL">Left limit of fire</button>
-      <button data-tool="limR">Right limit of fire</button>
-      <button data-tool="dir">Direction of fire</button>
-      <hr style="border:0;border-top:1px solid var(--line);margin:4px 0">
-      <button data-loc="L">Left end &rarr; my location</button>
-      <button data-loc="R">Right end &rarr; my location</button>
-    </div>
-  </span>
+  <button id="t-add">Add &#9662;</button>
   <button id="t-del" data-tool="del" title="Click a pin to delete it">Delete</button>
   <button id="t-bb" title="Zoom to the back-blast zone (Area F)">Back blast</button>
   <span class="sep"></span>
@@ -880,8 +954,28 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <button id="t-kml" title="Download or share KML for all visible ranges">KML &#8681;</button>
 </div>
 <div id="hint"></div>
+<button id="fit" title="Zoom to this range" aria-label="Zoom to this range"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
 <div id="map"><div class="nomap">Loading map&hellip; (needs internet for map tiles; coordinates, drawing math and the KML export all work offline)</div></div>
 </div>
+</div>
+
+<div id="addmenu" class="menu">
+      <button data-tool="L">Left end of firing line</button>
+      <button data-tool="R">Right end of firing line</button>
+      <button data-tool="limL">Left limit of fire</button>
+      <button data-tool="limR">Right limit of fire</button>
+      <button data-tool="dir">Direction of fire</button>
+      <hr style="border:0;border-top:1px solid var(--line);margin:4px 0">
+      <button data-loc="L">Left end &rarr; my location</button>
+      <button data-loc="R">Right end &rarr; my location</button>
+</div>
+<div id="moremenu" class="menu">
+  <button data-m="del">Delete pins</button>
+  <button data-m="bb">Zoom to back blast</button>
+  <button data-m="fit">Zoom to this range</button>
+  <button data-m="clear">Clear firing line</button>
+  <hr>
+  <button data-m="theme">Theme: <span data-themelabel>Auto</span></button>
 </div>
 
 <script>/* @preserve
@@ -1492,6 +1586,8 @@ const $ = id => document.getElementById(id);
 const TOUCH = matchMedia('(pointer:coarse)').matches || /[?&]touch=1/.test(location.search);
 const PIN = TOUCH ? 40 : 26;
 document.body.classList.toggle('touch', TOUCH); document.documentElement.style.setProperty('--pin', PIN + 'px');
+const phoneMQ = matchMedia('(max-width:760px), (max-height:560px)');
+const isPhone = () => document.body.classList.contains('phone');
 const COL = { disp:'#e0302d', ric:'#ff9a1f', areaA:'#ffd90f', areaB:'#ffe98a', areaF:'#a33fff', areaFc:'#d9aaff', target:'#3b82f6', areaH:'#7ba7d9', areaI:'#b5541c', areaC:'#ff7ab8', areaD:'#6fcf6f', areaE:'#9a9a9a' };
 let map = null, layer = null, mk = {}, linePoly = null, aimLine = null, limLines = {}, tool = 'move';
 const P = { L: null, R: null };          // firing line end points {lat, lon} of the range being edited
@@ -1663,7 +1759,7 @@ function draw() {
   res.areas.forEach(a => a.polys.forEach(poly => L.polygon(
     poly.map(ring => ring.map(p => { const q = SDZ.toLatLon(P.L, p); return [q.lat, q.lon]; })),
     { color: COL[a.kind], weight: a.kind === 'areaF' || a.kind === 'areaFc' ? 2.5 : 1.5, fillColor: COL[a.kind], fillOpacity: a.kind === 'disp' ? .35 : a.kind === 'areaF' ? .5 : .3, interactive: false })
-      .addTo(layer).bindTooltip(a.kind === 'areaF' ? 'BACK BLAST - danger' : a.kind === 'areaFc' ? 'caution' : a.name, { permanent: a.kind === 'areaF' || a.kind === 'areaFc', direction: 'center', className: a.kind === 'areaF' || a.kind === 'areaFc' ? 'bbtip' : '' })));
+      .addTo(layer).bindTooltip(a.kind === 'areaF' ? 'BACK BLAST - danger' : a.kind === 'areaFc' ? 'caution' : a.name, { permanent: a.kind === 'areaF' && map.getZoom() >= 16, direction: 'center', className: a.kind === 'areaF' || a.kind === 'areaFc' ? 'bbtip' : '' })));
 }
 const moving = m => m && m.dragging && m.dragging._draggable && m.dragging._draggable._moving;
 function anchor() { return P.L && P.R && !isSingle() ? mid() : P.L; }
@@ -1703,7 +1799,10 @@ function drawLimits() {
       mk[k].on('dragend', () => update());
     } else if (!moving(mk[k])) mk[k].setLatLng([hp.lat, hp.lon]);
     if (limLines[side]) limLines[side].remove();
-    limLines[side] = L.polyline([[o.lat, o.lon], [far.lat, far.lon]], { color: '#ff9a1f', weight: 2, dashArray: '2 6', interactive: false }).addTo(map);
+    const wide = (parseFloat($('limL').value) || 0) + (parseFloat($('limR').value) || 0) > 0.05;          // label the edges only when the fan has real limits
+    const fl = SDZ.toLatLon(o, SDZ.pt(ab, reach() * 1.06));
+    const lbl = L.marker([fl.lat, fl.lon], { opacity: wide ? 1 : 0, interactive: false, keyboard: false, icon: L.divIcon({ className: 'edgelbl', html: String(Math.round(nz(ab))).padStart(3, '0') + '&deg;', iconSize: null }) });
+    limLines[side] = L.layerGroup([L.polyline([[o.lat, o.lon], [far.lat, far.lon]], { color: '#ff9a1f', weight: 2, dashArray: '2 6', interactive: false }), lbl]).addTo(map);
   });
 }
 // Set one limit of fire to an absolute bearing; the other keeps its absolute bearing. Stored as azimuth +/- symmetric limits.
@@ -1768,7 +1867,7 @@ function update(fit) {
   $('src').innerHTML = `Source: DA PAM 385-63 (draft) table ${a.table}, p.${a.page}. ${DATA.source.status}.`;
   const res = compute();
   $('warn').innerHTML = [...notes, ...(res ? res.warnings : [])].join('<br>');
-  lineInfo(); draw(); panelBadge();
+  lineInfo(); draw(); panelBadge(); fixIdleHint(); renderSheet();
   if (fit === true && map && P.L) {
     const pts = [P.L, ...(P.R && !isSingle() ? [P.R] : [])];
     const b = L.latLngBounds(pts.map(p => [p.lat, p.lon])).extend(L.latLng(P.L.lat, P.L.lon).toBounds(reach() * 2.4));
@@ -1783,7 +1882,7 @@ $('ammo').onchange = fillSelectors;
 document.querySelectorAll('input[name=type],input[name=disp]').forEach(x => x.onchange = () => update());
 $('single').onchange = () => update();
 function useLocation(w) {
-  $('addmenu').classList.remove('open');
+  closeMenus();
   if (!navigator.geolocation) { setHint('This browser has no location support'); return; }
   if (window.isSecureContext === false) { setHint('Location needs a secure page (https://). Open this file from an https link or from the saved file.'); return; }
   setHint('Getting your location… (can take a few seconds)', 22000);
@@ -1850,9 +1949,10 @@ function renderRangeList() {
 }
 function activate(i, fit) {
   if (!ranges[i] || i === active) return;
+  if (!$('p-name').hidden) editName(false);
   commit(); active = i; setState(ranges[i]); setTool('move'); update(fit !== false && !!ranges[i].L);
 }
-const nextName = () => 'Range ' + (Math.max(0, ...ranges.map(r => +((/^Range (\d+)$/.exec(r.name) || [])[1] || 0))) + 1);
+const nextName = () => { let n = ranges.length + 1; while (ranges.some(r => r.name === 'Range ' + n)) n++; return 'Range ' + n; };
 function newRange(copy) {
   snap(); const b = ranges[active];
   let st;
@@ -1872,7 +1972,7 @@ function delRange() {
 $('rNew').onclick = () => newRange(false); $('t-new').onclick = () => newRange(false);
 $('rCopy').onclick = () => newRange(true); $('rDel').onclick = delRange;
 $('t-range').onchange = e => activate(+e.target.value);
-$('rName').addEventListener('input', e => { ranges[active].name = e.target.value || 'Range'; othersSig = ''; renderRangeList(); scheduleSave(); });
+$('rName').addEventListener('input', e => { ranges[active].name = e.target.value || 'Range'; if (isPhone()) renderSheet(); othersSig = ''; renderRangeList(); scheduleSave(); });
 $('rangeList').onclick = e => {
   const v = e.target.closest('[data-vis]');
   if (v) { snap(); ranges[+v.dataset.vis].visible = v.checked; othersSig = ''; update(); return; }
@@ -1903,6 +2003,8 @@ $('rFile').onchange = e => {
   }).catch(() => setHint('That file is not an SDZ project.', 6000));
 };
 function boot() {
+  try { applyTheme(localStorage.getItem(THEME_KEY) || 'auto'); } catch (e) { applyTheme('auto'); }
+  applyPhone();
   document.querySelectorAll('input[type=number]').forEach(i => i.setAttribute('inputmode', 'decimal'));
   ['cL', 'cR'].forEach(id => { $(id).setAttribute('autocapitalize', 'off'); $(id).setAttribute('autocorrect', 'off'); });
   document.body.appendChild($('addmenu'));                       // out of the (scrolling) toolbar so it can open upward on phones
@@ -1948,9 +2050,116 @@ $('t-gps').onclick = () => {
   }, e => { stopGps(); setHint(e.code === 1 ? 'Location blocked. Allow it for this page in your browser settings.' : 'GPS unavailable.', 8000); }, { enableHighAccuracy: true, maximumAge: 2000, timeout: 30000 });
 };
 
+// ---------- phone bottom sheet
+const ICON = {
+  gps: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>',
+  pin: '<svg viewBox="0 0 24 24"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg>',
+  plus: '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
+  undo: '<svg viewBox="0 0 24 24"><path d="M9 7 4 12l5 5"/><path d="M4 12h10a6 6 0 0 1 0 12"/></svg>',
+  share: '<svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 12v7h14v-7"/></svg>',
+  more: '<svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>',
+  one: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/></svg>'
+};
+let sheetState = 'peek', sheetT = 0;
+const sheetPx = st => { const top = $('sheetTop').offsetHeight; return st === 'peek' ? top : st === 'half' ? Math.max(top + 200, Math.round(innerHeight * .56)) : Math.round(innerHeight * .88); };
+function setSheet(st, animate) {
+  if (!isPhone()) return;
+  if (document.body.classList.contains('land')) { document.body.dataset.sheet = 'full'; $('sheet').style.height = ''; setTimeout(() => { if (map) map.invalidateSize(); }, 60); return; }
+  sheetState = st; document.body.dataset.sheet = st;
+  const a = $('sheet'); a.style.transition = animate === false ? 'none' : '';
+  a.style.height = 'calc(' + sheetPx(st) + 'px + env(safe-area-inset-bottom, 0px))';
+  const done = () => { if (map) { map.invalidateSize(); if (P.L) map.panInside([P.L.lat, P.L.lon], { padding: [70, 90], animate: false }); } a.style.transition = ''; };
+  const onEnd = e => { if (e.propertyName === 'height') { a.removeEventListener('transitionend', onEnd); done(); } };
+  a.addEventListener('transitionend', onEnd);                    // resize the map when the animation really ends
+  clearTimeout(sheetT); sheetT = setTimeout(() => { a.removeEventListener('transitionend', onEnd); done(); }, animate === false ? 60 : 450);
+}
+function setTab(t) {
+  document.body.dataset.tab = t;
+  document.querySelectorAll('#tabBar button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
+  $('sheetBody').scrollTop = 0;
+}
+$('tabBar').onclick = e => { const b = e.target.closest('button[data-tab]'); if (b) setTab(b.dataset.tab); };
+$('sumText').onclick = () => { setTab('weapon'); setSheet(sheetState === 'peek' ? 'half' : sheetState); };
+(() => {
+  const g = $('grab'); let dr = null;
+  g.addEventListener('pointerdown', e => { if (!isPhone()) return; dr = { y: e.clientY, h: $('sheet').getBoundingClientRect().height, moved: 0 }; $('sheet').style.transition = 'none'; g.setPointerCapture(e.pointerId); });
+  g.addEventListener('pointermove', e => { if (!dr) return; const dy = dr.y - e.clientY; dr.moved = Math.max(dr.moved, Math.abs(dy)); $('sheet').style.height = Math.min(innerHeight * .88, Math.max(sheetPx('peek'), dr.h + dy)) + 'px'; });
+  const end = () => { if (!dr) return; const d = dr, h = $('sheet').getBoundingClientRect().height; dr = null;
+    if (d.moved < 6) { setSheet(sheetState === 'peek' ? 'half' : 'peek'); return; }
+    setSheet(['peek', 'half', 'full'].map(x => [x, Math.abs(sheetPx(x) - h)]).sort((p, q) => p[1] - q[1])[0][0]); };
+  g.addEventListener('pointerup', end); g.addEventListener('pointercancel', end);
+})();
+function actionState() { return !P.L ? 'start' : (!P.R && !$('single').checked) ? 'second' : 'main'; }
+function renderSheet() {
+  if (!isPhone() || !ranges[active]) return;
+  const a = cur(), r = row(), warn = $('warn').textContent.trim(), X = inputs().vals.X || r.X || r.Y, az = Math.round(nz(parseFloat($('az').value) || 0));
+  $('p-range').innerHTML = ranges.map((st, i) => `<option value="${i}"${i === active ? ' selected' : ''}>${esc(st.name)}</option>`).join('');
+  $('sumText').innerHTML = `<b>${esc(a.name)}</b> &middot; az ${String(az).padStart(3, '0')}&deg;${X ? ' &middot; X ' + Math.round(X).toLocaleString() + ' m' : ''}${warn ? ' &middot; <span style="color:var(--warn)">&#9888; notes</span>' : ''}`;
+  const st = actionState(), row_ = $('actRow'), B = (act, icon, label, cls) => `<button data-act="${act}" class="${cls || ''}">${icon}<span>${label}</span></button>`;
+  row_.className = st === 'start' ? 'big' : '';
+  row_.innerHTML = st === 'start' ? B('gps-L', ICON.gps, 'Use my location', 'primary') + B('place-L', ICON.pin, 'Place on map')
+    : st === 'second' ? B('gps-R', ICON.gps, 'Right end here', 'primary') + B('place-R', ICON.pin, 'Tap right end') + B('single', ICON.one, 'Single point')
+    : B('add', ICON.plus, 'Add', 'primary') + B('undo', ICON.undo, 'Undo') + B('gps', ICON.gps, 'GPS', gpsWatch != null ? 'on' : '') + B('kml', ICON.share, TOUCH && navigator.canShare ? 'Share KML' : 'KML') + B('more', ICON.more, 'More');
+  layoutSheet();
+}
+function layoutSheet() { if (isPhone()) setSheet(sheetState, false); }
+$('actRow').onclick = e => {
+  const b = e.target.closest('button[data-act]'); if (!b) return; const k = b.dataset.act;
+  if (k === 'gps-L') useLocation('L'); else if (k === 'gps-R') useLocation('R');
+  else if (k === 'place-L') setTool('L'); else if (k === 'place-R') setTool('R');
+  else if (k === 'single') { snap(); $('single').checked = true; update(); }
+  else if (k === 'add') openMenu($('addmenu'), b); else if (k === 'undo') undo(); else if (k === 'gps') { $('t-gps').click(); renderSheet(); }
+  else if (k === 'kml') downloadKml(false); else if (k === 'more') openMenu($('moremenu'), b);
+};
+function editName(on) {
+  const n = $('p-name'); $('p-range').hidden = on; n.hidden = !on; $('p-edit').style.display = on ? 'none' : '';
+  if (on) { n.value = ranges[active].name; n.focus(); n.select(); } else renderSheet();
+}
+$('p-edit').onclick = () => editName(true);
+$('p-name').addEventListener('input', e => { ranges[active].name = e.target.value.trim() ? e.target.value : 'Range'; $('rName').value = ranges[active].name; othersSig = ''; renderRangeList(); scheduleSave(); });
+$('p-name').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === 'Escape') { e.preventDefault(); e.target.blur(); } });
+$('p-name').addEventListener('blur', () => { if (!$('p-name').hidden) { editName(false); update(); } });
+$('p-new').onclick = () => { newRange(false); if (isPhone()) editName(true); };
+$('p-range').onchange = e => activate(+e.target.value);
+$('moremenu').onclick = e => {
+  const b = e.target.closest('button[data-m]'); if (!b) return; const k = b.dataset.m; closeMenus();
+  if (k === 'del') setTool('del'); else if (k === 'bb') $('t-bb').click(); else if (k === 'fit') fitRange(); else if (k === 'clear') clearPoint('all'); else if (k === 'theme') cycleTheme();
+};
+function fitRange() { if (!P.L || !map) { setHint('Place the firing line first'); return; } update(true); }
+$('fit').onclick = fitRange;
+function applyPhone() {
+  const phone = phoneMQ.matches, land = phone && innerWidth > innerHeight;
+  document.body.classList.toggle('phone', phone); document.body.classList.toggle('land', land);
+  if (phone) { if (!document.body.dataset.tab) setTab('weapon'); renderSheet(); setSheet(sheetState, false); }
+  else { $('sheet').style.height = ''; delete document.body.dataset.sheet; }
+  setTimeout(() => { if (map) { map.invalidateSize(); if (phone && P.L) map.panInside([P.L.lat, P.L.lon], { padding: [70, 90], animate: false }); } }, 120);
+}
+phoneMQ.addEventListener ? phoneMQ.addEventListener('change', applyPhone) : phoneMQ.addListener(applyPhone);
+// The on-screen keyboard shrinks the window height only; without this guard a phone in portrait looks "landscape" while you type.
+let lastW = innerWidth, rzT = 0;
+const typingNow = () => { const e = document.activeElement; return !!e && /^(INPUT|SELECT|TEXTAREA)$/.test(e.tagName) && !['radio', 'checkbox', 'button'].includes(e.type); };
+addEventListener('resize', () => {
+  if (isPhoneNow() && typingNow() && innerWidth === lastW) return;
+  clearTimeout(rzT); rzT = setTimeout(() => { lastW = innerWidth; applyPhone(); }, 120);
+});
+const isPhoneNow = () => phoneMQ.matches;
+
+// ---------- theme (Auto follows the phone; Light is easier to read in direct sun)
+const THEME_KEY = 'sdzPlanner.theme';
+let themeMode = 'auto';
+function applyTheme(mode) {
+  themeMode = ['light', 'dark'].includes(mode) ? mode : 'auto';
+  if (themeMode === 'auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', themeMode);
+  try { localStorage.setItem(THEME_KEY, themeMode); } catch (e) { /* ignore */ }
+  document.querySelectorAll('[data-themelabel]').forEach(el => { el.textContent = { auto: 'Auto', light: 'Light', dark: 'Dark' }[themeMode]; });
+}
+function cycleTheme() { applyTheme({ auto: 'light', light: 'dark', dark: 'auto' }[themeMode]); setHint('Theme: ' + { auto: 'Auto', light: 'Light', dark: 'Dark' }[themeMode], 2500); }
+$('themeBtn').onclick = cycleTheme;
+
 // ---------- sidebar show / hide
 const PANEL_KEY = 'sdzPlanner.panel';
 function setPanel(open, save) {
+  if (isPhone() && save !== false) return;
   document.body.classList.toggle('nopanel', !open);
   $('t-panel').setAttribute('aria-pressed', open ? 'true' : 'false');
   if (save !== false) { try { localStorage.setItem(PANEL_KEY, open ? '1' : '0'); } catch (e) { /* ignore */ } }
@@ -1961,23 +2170,28 @@ function panelBadge() { $('t-panel').classList.toggle('warn', !!$('warn').textCo
 
 // ---------- toolbar
 const HINTS = {
-  move: 'Drag pins and handles to adjust. Right-click a pin to delete it.',
+  move: 'Drag pins and handles to adjust.',
   L: 'Click the map to place the LEFT end of the firing line',
-  R: 'Click the map to place the RIGHT end of the firing line (or tick "single firing point")',
+  R: 'Click the map to place the RIGHT end of the firing line',
   limL: 'Click the map in the direction of the LEFT limit of fire',
   limR: 'Click the map in the direction of the RIGHT limit of fire',
   dir: 'Click the map in the direction you want to fire',
-  del: 'Click a pin to delete it (Esc to stop)'
+  del: 'Click a pin to delete it'
 };
 let hintTimer = 0;
 function setHint(t, ms) { $('hint').textContent = t || ''; clearTimeout(hintTimer); if (t && tool === 'move') hintTimer = setTimeout(() => { if (tool === 'move') $('hint').textContent = ''; }, ms || 3500); }
 const ADD_TOOLS = ['L', 'R', 'limL', 'limR', 'dir'];
+const verb = t => TOUCH ? t.replace(/^Click/, 'Tap') : t;
+const idleHint = () => (P.L || isPhone()) ? '' : 'Use Add \u25be to place the firing line, or type coordinates in the sidebar';
+function fixIdleHint() { if (tool === 'move' && P.L && /^Use Add/.test($('hint').textContent)) $('hint').textContent = ''; }
+$('hint').onclick = () => { if (tool !== 'move' && isPhone()) setTool('move'); };
 function setTool(t) {
-  tool = t; $('addmenu').classList.remove('open');
+  tool = t; closeMenus();
   document.querySelectorAll('#toolbar > [data-tool]').forEach(b => b.classList.toggle('active', b.dataset.tool === t));
   $('t-add').classList.toggle('active', ADD_TOOLS.includes(t));
   if (map) map.getContainer().style.cursor = ADD_TOOLS.includes(t) ? 'crosshair' : '';
-  $('hint').textContent = t === 'move' ? (P.L ? '' : 'Use Add ▾ to place the firing line, or type coordinates on the left') : HINTS[t];
+  $('hint').textContent = t === 'move' ? idleHint() : verb(HINTS[t]) + (isPhone() ? '   \u2715 Cancel' : '');
+  if (isPhone() && ADD_TOOLS.includes(t)) setSheet('peek');
 }
 function mapClick(ll) {
   if (tool === 'L' || tool === 'R') {
@@ -1992,16 +2206,18 @@ function mapClick(ll) {
   }
   if (tool === 'dir') { snap(); $('az').value = SDZ.fromLatLon(anchor(), ll).bearing.toFixed(1); setTool('move'); update(); }
 }
-document.querySelectorAll('#toolbar [data-tool]').forEach(b => b.onclick = () => setTool(b.dataset.tool === tool && b.dataset.tool !== 'move' ? 'move' : b.dataset.tool));
-function placeAddMenu() {
-  const m = $('addmenu'), b = $('t-add').getBoundingClientRect(), w = Math.min(270, innerWidth - 16), above = b.top - 14, below = innerHeight - b.bottom - 14;
+document.querySelectorAll('#toolbar [data-tool], #addmenu [data-tool]').forEach(b => b.onclick = () => setTool(b.dataset.tool === tool && b.dataset.tool !== 'move' ? 'move' : b.dataset.tool));
+function closeMenus() { document.querySelectorAll('.menu').forEach(m => m.classList.remove('open')); }
+function openMenu(m, anchor) {
+  const was = m.classList.contains('open'); closeMenus(); if (was) return;
+  const b = anchor.getBoundingClientRect(), w = Math.min(280, innerWidth - 16), above = b.top - 14, below = innerHeight - b.bottom - 14;
   m.style.width = w + 'px'; m.style.left = Math.max(8, Math.min(b.left, innerWidth - w - 8)) + 'px';
   if (above >= below) { m.style.top = 'auto'; m.style.bottom = (innerHeight - b.top + 6) + 'px'; m.style.maxHeight = Math.max(120, above) + 'px'; }
   else { m.style.bottom = 'auto'; m.style.top = (b.bottom + 6) + 'px'; m.style.maxHeight = Math.max(120, below) + 'px'; }
-  m.style.overflowY = 'auto';
+  m.classList.add('open');
 }
-$('t-add').onclick = e => { e.stopPropagation(); const m = $('addmenu'), open = !m.classList.contains('open'); if (open) placeAddMenu(); m.classList.toggle('open', open); };
-document.addEventListener('click', e => { if (!e.target.closest('#addmenu') && e.target.id !== 't-add') $('addmenu').classList.remove('open'); });
+$('t-add').onclick = e => { e.stopPropagation(); openMenu($('addmenu'), $('t-add')); };
+document.addEventListener('click', e => { if (!e.target.closest('.menu') && !e.target.closest('#t-add, #actRow')) closeMenus(); });
 $('t-bb').onclick = () => {
   const res = compute(); if (!res) { setHint('Place the firing line first'); return; }
   const fs = res.areas.filter(a => a.kind === 'areaF' || a.kind === 'areaFc');
@@ -2015,7 +2231,7 @@ $('t-clear').onclick = () => clearPoint('all');
 $('t-kml').onclick = () => downloadKml(false);
 document.addEventListener('keydown', e => {
   const ae = document.activeElement, typing = /^(INPUT|SELECT|TEXTAREA)$/.test(ae.tagName) && ae.type !== 'radio' && ae.type !== 'checkbox';
-  if (e.key === 'Escape') setTool('move');
+  if (e.key === 'Escape') { closeMenus(); setTool('move'); }
   else if (!typing && !e.ctrlKey && !e.metaKey && !e.altKey && e.key.toLowerCase() === 'p') $('t-panel').click();
   else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !typing) { e.preventDefault(); undo(); }
 });
